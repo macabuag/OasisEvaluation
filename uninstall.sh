@@ -81,13 +81,13 @@ sed -i "s|:latest|:${VERS_API}-slim|g" docker-compose.yml
 
 set +e
 docker-compose down
-docker-compose pull
+#docker-compose pull
 
 # Workaround for older docker-compose 
-docker pull coreoasis/model_worker:${VERS_WORKER}-slim
-docker pull coreoasis/api_server:${VERS_API}-slim
+#docker pull coreoasis/model_worker:${VERS_WORKER}-slim
+#docker pull coreoasis/api_server:${VERS_API}-slim
 set -e
-docker-compose up -d --no-build
+docker-compose down #-d --no-build
 
 # Run Oasis UI
 cd $SCRIPT_DIR/$GIT_UI
@@ -97,12 +97,12 @@ set +e
 docker network create shiny-net
 set -e
 docker pull coreoasis/oasisui_app:$VERS_UI
-docker-compose -f $SCRIPT_DIR/$GIT_UI/docker-compose.yml up -d
+docker-compose -f $SCRIPT_DIR/$GIT_UI/docker-compose.yml down #up -d
 
 # Run API eveluation notebook
 cd $SCRIPT_DIR
 
-git checkout -- api_evaluation_notebook/Dockerfile.ApiEvaluationNotebook
-sed -i "s|coreoasis/model_worker:latest|coreoasis/model_worker:${VERS_WORKER}-slim|g" api_evaluation_notebook/Dockerfile.ApiEvaluationNotebook
-docker-compose -f api_evaluation_notebook/docker-compose.api_evaluation_notebook.yml build
-docker-compose -f api_evaluation_notebook/docker-compose.api_evaluation_notebook.yml up -d
+#git checkout -- api_evaluation_notebook/Dockerfile.ApiEvaluationNotebook
+#sed -i "s|coreoasis/model_worker:latest|coreoasis/model_worker:${VERS_WORKER}-slim|g" api_evaluation_notebook/Dockerfile.ApiEvaluationNotebook
+#docker-compose -f api_evaluation_notebook/docker-compose.api_evaluation_notebook.yml build
+docker-compose -f api_evaluation_notebook/docker-compose.api_evaluation_notebook.yml down #up -d
